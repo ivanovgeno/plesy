@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Evidence Plesů 2026</title>
+    <link rel="manifest" href="data:application/json,{}">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary: #7c3aed;
+            --primary-dark: #5b21b6;
+            --accent: #00d4ff;
+            --bg: #1a1a2e;
+            --bg-card: #1f2937;
+            --text: #fff;
+            --text-muted: #9ca3af;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            color: var(--text);
+            padding: 10px;
+            padding-bottom: 80px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 15px 10px;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(124, 58, 237, 0.2);
+        }
+
+        .card-header {
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            background: rgba(124, 58, 237, 0.1);
+        }
+
+        .card-header h2 {
+            font-size: 1rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-header .toggle {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        .card-header.open .toggle {
+            transform: rotate(180deg);
+        }
+
+        .card-content {
+            padding: 15px;
+            display: none;
+        }
+
+        .card-content.open {
+            display: block;
+        }
+
+        /* Settings */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .setting-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .setting-item label {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .setting-item input {
+            padding: 10px;
+            border-radius: 10px;
+            border: 2px solid rgba(124, 58, 237, 0.3);
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--text);
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        /* Event List (Mobile-first) */
+        .event-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .event-card {
+            background: var(--bg-card);
+            border-radius: 14px;
+            padding: 15px;
+            border-left: 4px solid var(--primary);
+            position: relative;
+        }
+
+        .event-card.vip {
+            border-left-color: #ffd700;
+        }
+
+        .event-card.important {
+            border-left-color: var(--success);
+        }
+
+        .event-card.normal {
+            border-left-color: #3b82f6;
+        }
+
+        .event-card.low {
+            border-left-color: #6b7280;
+        }
+
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .event-name {
+            font-weight: 600;
+            font-size: 1rem;
+            flex: 1;
+            padding-right: 10px;
+        }
+
+        .event-date {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .day-badge {
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-top: 3px;
+        }
+
+        .day-so {
+            background: var(--success);
+        }
+
+        .day-pa {
+            background: #3b82f6;
+        }
+
+        .day-ne {
+            background: var(--warning);
+        }
+
+        .day-other {
+            background: #6b7280;
+        }
+
+        .event-services {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .service-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            background: rgba(124, 58, 237, 0.3);
+        }
+
+        .service-badge.active {
+            background: var(--primary);
+        }
+
+        .event-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 8px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .stat.profit .stat-value {
+            color: var(--success);
+        }
+
+        .stat.cost .stat-value {
+            color: var(--danger);
+        }
+
+        .stat.net .stat-value {
+            color: var(--accent);
+        }
+
+        /* Workers section */
+        .workers-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .worker-stat {
+            text-align: center;
+        }
+
+        .worker-stat input {
+            width: 50px;
+            padding: 6px;
+            text-align: center;
+            border-radius: 8px;
+            border: 2px solid rgba(124, 58, 237, 0.3);
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--text);
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .worker-stat label {
+            display: block;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .workers-needed {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .needed-0 {
+            background: rgba(34, 197, 94, 0.3);
+            color: var(--success);
+        }
+
+        .needed-1 {
+            background: rgba(250, 204, 21, 0.3);
+            color: #facc15;
+        }
+
+        .needed-2 {
+            background: rgba(249, 115, 22, 0.4);
+            color: #f97316;
+        }
+
+        .needed-3 {
+            background: rgba(239, 68, 68, 0.5);
+            color: #fca5a5;
+        }
+
+        .event-type {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .type-vip {
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            color: #000;
+        }
+
+        .type-important {
+            background: var(--success);
+        }
+
+        .type-normal {
+            background: #3b82f6;
+        }
+
+        .type-low {
+            background: #6b7280;
+        }
+
+        /* Delete button */
+        .delete-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(239, 68, 68, 0.2);
+            border: none;
+            color: var(--danger);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        /* Summary */
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .summary-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .summary-card h3 {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .summary-card .value {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .summary-card.profit .value {
+            color: var(--success);
+        }
+
+        .summary-card.cost .value {
+            color: var(--danger);
+        }
+
+        .summary-card.net .value {
+            color: var(--accent);
+        }
+
+        .summary-card.workers .value {
+            color: var(--warning);
+        }
+
+        /* FAB Button */
+        .fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(124, 58, 237, 0.5);
+            z-index: 100;
+        }
+
+        /* Bottom bar */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid rgba(124, 58, 237, 0.2);
+            z-index: 90;
+        }
+
+        .bottom-bar button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #16a34a);
+            color: white;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal.open {
+            display: block;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .modal h2 {
+            color: var(--accent);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid rgba(124, 58, 237, 0.3);
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            background: rgba(124, 58, 237, 0.2);
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-item input {
+            width: 16px;
+            height: 16px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            background: rgba(107, 114, 128, 0.3);
+            color: var(--text);
+        }
+
+        /* Edit mode */
+        .edit-btn {
+            background: rgba(124, 58, 237, 0.2);
+            border: none;
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-left: auto;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+        }
+
+        /* Desktop styles */
+        @media (min-width: 768px) {
+            body {
+                padding: 20px;
+                padding-bottom: 100px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .summary {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .event-list {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .settings-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .event-list {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>📋 Evidence Plesů</h1>
+        <p>2026 • Sledování akcí a pracovníků</p>
+    </div>
+
+    <!-- Summary -->
+    <div class="summary">
+        <div class="summary-card profit">
+            <h3>💰 Hrubý</h3>
+            <div class="value" id="totalGross">0 Kč</div>
+        </div>
+        <div class="summary-card cost">
+            <h3>💸 Náklady</h3>
+            <div class="value" id="totalCost">0 Kč</div>
+        </div>
+        <div class="summary-card net">
+            <h3>💎 Čistý</h3>
+            <div class="value" id="totalNet">0 Kč</div>
+        </div>
+        <div class="summary-card workers">
+            <h3>⚠️ Chybí</h3>
+            <div class="value" id="totalNeeded">0</div>
+        </div>
+    </div>
+
+    <!-- Settings Card -->
+    <div class="card">
+        <div class="card-header" onclick="toggleCard(this)">
+            <h2>⚙️ Nastavení</h2>
+            <span class="toggle">▼</span>
+        </div>
+        <div class="card-content">
+            <div class="settings-grid">
+                <div class="setting-item">
+                    <label>Výplata/osoba</label>
+                    <input type="number" id="workerPay" value="1500" onchange="recalculate()">
+                </div>
+                <div class="setting-item">
+                    <label>VIP limit</label>
+                    <input type="number" id="vipLimit" value="25000" onchange="recalculate()">
+                </div>
+                <div class="setting-item">
+                    <label>Důležitá limit</label>
+                    <input type="number" id="importantLimit" value="15000" onchange="recalculate()">
+                </div>
+                <div class="setting-item">
+                    <label>Normální limit</label>
+                    <input type="number" id="normalLimit" value="8000" onchange="recalculate()">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Events List -->
+    <div class="event-list" id="eventList"></div>
+
+    <!-- FAB -->
+    <button class="fab" onclick="openAddModal()">+</button>
+
+    <!-- Bottom Bar -->
+    <div class="bottom-bar">
+        <button class="btn-primary" onclick="exportCSV()">📥 Export</button>
+        <button class="btn-success" onclick="saveData()">💾 Uložit</button>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">➕ Nový ples</h2>
+            <div class="form-group">
+                <label>Datum</label>
+                <input type="date" id="inputDate">
+            </div>
+            <div class="form-group">
+                <label>Název plesu</label>
+                <input type="text" id="inputName" placeholder="Název...">
+            </div>
+            <div class="form-group">
+                <label>Služby</label>
+                <div class="checkbox-group" id="serviceCheckboxes"></div>
+            </div>
+            <div class="form-group">
+                <label>Paušál (poznámka)</label>
+                <input type="text" id="inputPausal" placeholder="Volitelné...">
+            </div>
+            <div class="form-group">
+                <label>Výdělek (Kč)</label>
+                <input type="number" id="inputVydelek" placeholder="0">
+            </div>
+            <div class="form-group">
+                <label>Extra pracovníci navíc</label>
+                <input type="number" id="inputExtra" value="0" min="0">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="closeModal()">Zrušit</button>
+                <button class="btn-primary" onclick="saveEvent()">Uložit</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let services = [
+            { id: 'video', name: 'Video', icon: '🎬', countWorkers: false },
+            { id: 'foto1', name: 'Fotobudka', icon: '📸', countWorkers: true },
+            { id: 'foto2', name: 'Fotobudka 2', icon: '📸', countWorkers: true },
+            { id: 'r360', name: '360', icon: '🔄', countWorkers: true }
+        ];
+
+        let events = [
+            { id: 1, date: '2026-01-10', name: 'Jasenná Hasičský', services: { video: true, foto1: true }, vydelek: 18000, confirmed: 0, extra: 0, pausal: '' },
+            { id: 2, date: '2026-01-23', name: 'Nová Paka', services: { foto1: true }, vydelek: 6500, confirmed: 0, extra: 0, pausal: '' },
+            { id: 3, date: '2026-01-30', name: 'Skuteč', services: { foto1: true }, vydelek: 9600, confirmed: 0, extra: 0, pausal: '' },
+            { id: 4, date: '2026-02-06', name: 'Holice Pardubice', services: { foto1: true }, vydelek: 30000, confirmed: 2, extra: 1, pausal: '' },
+            { id: 5, date: '2026-02-13', name: 'Hradec MOOD', services: { video: true, foto1: true }, vydelek: 17500, confirmed: 0, extra: 0, pausal: '' },
+        ];
+
+        let editingId = null;
+        let nextId = 100;
+        const dayNames = ['Ne', 'Po', 'Út', 'St', 'Čt', 'Pá', 'So'];
+
+        function toggleCard(header) {
+            header.classList.toggle('open');
+            header.nextElementSibling.classList.toggle('open');
+        }
+
+        function formatMoney(n) {
+            return new Intl.NumberFormat('cs-CZ').format(n) + ' Kč';
+        }
+
+        function formatShortMoney(n) {
+            if (n >= 1000) return Math.round(n / 1000) + 'k';
+            return n + '';
+        }
+
+        function getWorkers(event) {
+            let count = 0;
+            services.forEach(s => {
+                if (s.countWorkers && event.services[s.id]) count++;
+            });
+            return count + (event.extra || 0);
+        }
+
+        function getNeeded(event) {
+            return Math.max(0, getWorkers(event) - (event.confirmed || 0));
+        }
+
+        function getEventType(vydelek) {
+            const vip = parseInt(document.getElementById('vipLimit').value) || 25000;
+            const imp = parseInt(document.getElementById('importantLimit').value) || 15000;
+            const norm = parseInt(document.getElementById('normalLimit').value) || 8000;
+            if (vydelek >= vip) return { class: 'vip', type: 'type-vip', name: '⭐ VIP' };
+            if (vydelek >= imp) return { class: 'important', type: 'type-important', name: '🔥 Důležitá' };
+            if (vydelek >= norm) return { class: 'normal', type: 'type-normal', name: '📌 Normální' };
+            return { class: 'low', type: 'type-low', name: '📋 Menší' };
+        }
+
+        function getDayClass(d) {
+            const day = new Date(d).getDay();
+            if (day === 6) return 'day-so';
+            if (day === 5) return 'day-pa';
+            if (day === 0) return 'day-ne';
+            return 'day-other';
+        }
+
+        function getNeededClass(n) {
+            if (n === 0) return 'needed-0';
+            if (n === 1) return 'needed-1';
+            if (n === 2) return 'needed-2';
+            return 'needed-3';
+        }
+
+        function render() {
+            const list = document.getElementById('eventList');
+            const pay = parseInt(document.getElementById('workerPay').value) || 1500;
+
+            if (events.length === 0) {
+                list.innerHTML = '<div class="empty-state"><h3>Žádné plesy</h3><p>Klikni na + pro přidání</p></div>';
+                updateTotals();
+                return;
+            }
+
+            // Sort by date
+            events.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            list.innerHTML = events.map(e => {
+                const type = getEventType(e.vydelek);
+                const workers = getWorkers(e);
+                const needed = getNeeded(e);
+                const cost = workers * pay;
+                const net = e.vydelek - cost;
+                const d = e.date ? new Date(e.date) : null;
+                const dayName = d ? dayNames[d.getDay()] : '';
+                const dateStr = d ? d.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric' }) : '';
+
+                const activeServices = services.filter(s => e.services[s.id]).map(s =>
+                    `<span class="service-badge active">${s.icon} ${s.name}</span>`
+                ).join('');
+
+                return `
+                <div class="event-card ${type.class}">
+                    <span class="event-type ${type.type}">${type.name}</span>
+                    <div class="event-header">
+                        <div class="event-name">${e.name}</div>
+                        <div class="event-date">
+                            ${dateStr}
+                            <span class="day-badge ${getDayClass(e.date)}">${dayName}</span>
+                        </div>
+                    </div>
+                    <div class="event-services">${activeServices || '<span class="service-badge">Bez služeb</span>'}</div>
+                    <div class="event-stats">
+                        <div class="stat profit">
+                            <div class="stat-value">${formatShortMoney(e.vydelek)}</div>
+                            <div class="stat-label">Výdělek</div>
+                        </div>
+                        <div class="stat cost">
+                            <div class="stat-value">${formatShortMoney(cost)}</div>
+                            <div class="stat-label">Náklady</div>
+                        </div>
+                        <div class="stat net">
+                            <div class="stat-value">${formatShortMoney(net)}</div>
+                            <div class="stat-label">Čistý</div>
+                        </div>
+                    </div>
+                    <div class="workers-section">
+                        <div class="worker-stat">
+                            <span class="workers-needed ${getNeededClass(needed)}">${needed}</span>
+                            <label>Chybí</label>
+                        </div>
+                        <div class="worker-stat">
+                            <input type="number" value="${e.confirmed || 0}" min="0" onchange="updateConfirmed(${e.id}, this.value)">
+                            <label>Domluveno</label>
+                        </div>
+                        <div class="worker-stat">
+                            <input type="number" value="${e.extra || 0}" min="0" onchange="updateExtra(${e.id}, this.value)">
+                            <label>Extra</label>
+                        </div>
+                    </div>
+                    <button class="edit-btn" onclick="editEvent(${e.id})">✏️ Upravit</button>
+                    <button class="delete-btn" onclick="deleteEvent(${e.id})">🗑️</button>
+                </div>`;
+            }).join('');
+
+            updateTotals();
+        }
+
+        function updateConfirmed(id, val) {
+            const e = events.find(x => x.id === id);
+            if (e) { e.confirmed = Math.max(0, parseInt(val) || 0); render(); }
+        }
+
+        function updateExtra(id, val) {
+            const e = events.find(x => x.id === id);
+            if (e) { e.extra = Math.max(0, parseInt(val) || 0); render(); }
+        }
+
+        function updateTotals() {
+            const pay = parseInt(document.getElementById('workerPay').value) || 1500;
+            let gross = 0, cost = 0, needed = 0;
+            events.forEach(e => {
+                gross += e.vydelek || 0;
+                cost += getWorkers(e) * pay;
+                needed += getNeeded(e);
+            });
+            document.getElementById('totalGross').textContent = formatMoney(gross);
+            document.getElementById('totalCost').textContent = formatMoney(cost);
+            document.getElementById('totalNet').textContent = formatMoney(gross - cost);
+            document.getElementById('totalNeeded').textContent = needed + ' lidí';
+        }
+
+        function recalculate() { render(); }
+
+        function openAddModal() {
+            editingId = null;
+            document.getElementById('modalTitle').textContent = '➕ Nový ples';
+            document.getElementById('inputDate').value = '';
+            document.getElementById('inputName').value = '';
+            document.getElementById('inputPausal').value = '';
+            document.getElementById('inputVydelek').value = '';
+            document.getElementById('inputExtra').value = '0';
+            renderServiceCheckboxes({});
+            document.getElementById('modal').classList.add('open');
+        }
+
+        function editEvent(id) {
+            const e = events.find(x => x.id === id);
+            if (!e) return;
+            editingId = id;
+            document.getElementById('modalTitle').textContent = '✏️ Upravit ples';
+            document.getElementById('inputDate').value = e.date || '';
+            document.getElementById('inputName').value = e.name || '';
+            document.getElementById('inputPausal').value = e.pausal || '';
+            document.getElementById('inputVydelek').value = e.vydelek || '';
+            document.getElementById('inputExtra').value = e.extra || 0;
+            renderServiceCheckboxes(e.services || {});
+            document.getElementById('modal').classList.add('open');
+        }
+
+        function renderServiceCheckboxes(selected) {
+            const container = document.getElementById('serviceCheckboxes');
+            container.innerHTML = services.map(s => `
+                <label class="checkbox-item">
+                    <input type="checkbox" id="svc_${s.id}" ${selected[s.id] ? 'checked' : ''}>
+                    ${s.icon} ${s.name}
+                </label>
+            `).join('');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('open');
+        }
+
+        function saveEvent() {
+            const date = document.getElementById('inputDate').value;
+            const name = document.getElementById('inputName').value.trim();
+            const pausal = document.getElementById('inputPausal').value;
+            const vydelek = parseInt(document.getElementById('inputVydelek').value) || 0;
+            const extra = parseInt(document.getElementById('inputExtra').value) || 0;
+
+            if (!name) { alert('Zadej název plesu!'); return; }
+
+            const svcs = {};
+            services.forEach(s => {
+                svcs[s.id] = document.getElementById('svc_' + s.id)?.checked || false;
+            });
+
+            if (editingId) {
+                const e = events.find(x => x.id === editingId);
+                if (e) {
+                    e.date = date;
+                    e.name = name;
+                    e.pausal = pausal;
+                    e.vydelek = vydelek;
+                    e.extra = extra;
+                    e.services = svcs;
+                }
+            } else {
+                events.push({
+                    id: nextId++,
+                    date, name, pausal, vydelek, extra,
+                    services: svcs,
+                    confirmed: 0
+                });
+            }
+
+            closeModal();
+            render();
+        }
+
+        function deleteEvent(id) {
+            if (confirm('Smazat tento ples?')) {
+                events = events.filter(e => e.id !== id);
+                render();
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('plesyData2', JSON.stringify({ services, events }));
+            alert('Data uložena!');
+        }
+
+        function loadData() {
+            try {
+                const saved = localStorage.getItem('plesyData2');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    if (data.services) services = data.services;
+                    if (data.events) events = data.events;
+                }
+            } catch (e) { }
+        }
+
+        function exportCSV() {
+            const pay = parseInt(document.getElementById('workerPay').value) || 1500;
+            let csv = 'Datum;Nazev;Vydelek;Celkem lidi;Domluveno;Chybi;Cena lidi;Cisty zisk\n';
+            events.forEach(e => {
+                const workers = getWorkers(e);
+                const cost = workers * pay;
+                csv += `${e.date};${e.name};${e.vydelek};${workers};${e.confirmed || 0};${getNeeded(e)};${cost};${e.vydelek - cost}\n`;
+            });
+            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'plesy_2026.csv';
+            link.click();
+        }
+
+        // Init
+        loadData();
+        render();
+    </script>
+</body>
+
+</html>
